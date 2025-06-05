@@ -1,13 +1,43 @@
-# React + TypeScript + Vite
+# MERN Stack Auth System 🔐
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack authentication system built with the **MERN stack**, featuring:
 
-Currently, two official plugins are available:
+- ✅ Email OTP Verification
+- 🔐 JWT-based Authentication
+- 🔁 Password Reset Flow
+- 🧠 Zustand for State Management
+- 📋 Formik + Yup for Form Handling and Validation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🧱 Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Backend
+- **Node.js**, **Express.js**
+- **MongoDB** with **Mongoose**
+- **JWT** for authentication
+- **Nodemailer** for email OTPs
+- **bcryptjs** for password hashing
 
+### Frontend
+- **React**
+- **Formik** + **Yup** (forms + validation)
+- **Zustand** for global state
+- Pages: `Register`, `Login`, `OTP Verification`, `Reset Password`, `User Profile`
+
+---
+
+## 🔐 Features
+
+### Backend
+- User registration with OTP email verification
+- JWT-based login and protected routes
+- Password hashing with bcrypt
+- Forgot password + reset flow via email
+- OTP expiration, one-time use, and security checks
+
+### Frontend
+- React SPA with basic auth pages
+- Zustand for login state, user data, token handling
+- Formik/Yup forms for Register, Login, OTP, and Reset Password
+- Profile page only accessible after login
