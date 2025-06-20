@@ -15,7 +15,7 @@ export async function getUser(req, res) {
     }
     const { password, ...rest } = Object.assign({}, user.toJSON());
     return res.status(201).send(rest);
-  } catch (err) {
+  } catch (error) {
     return res.status(404).send({ error: "Cannot find user data" });
   }
 }

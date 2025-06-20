@@ -5,8 +5,8 @@ export function convertToBase64(file: File): Promise<string> {
     fileReader.onload = () => {
       resolve(fileReader.result as string);
     };
-    fileReader.onerror = (err) => {
-      reject(err);
+    fileReader.onerror = (error) => {
+      reject(error);
     };
   });
 }

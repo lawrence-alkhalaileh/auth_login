@@ -24,8 +24,8 @@ export async function resetPassword(req, res) {
     } else {
       return res.status(400).send({ error: "Password update failed" });
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     return res.status(500).send({ error: "Internal Server Error" });
   }
 }

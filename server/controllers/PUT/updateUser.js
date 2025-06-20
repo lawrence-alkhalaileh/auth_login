@@ -18,10 +18,10 @@ export async function updateUser(req, res) {
         .status(404)
         .send({ error: "No matching record found or no change detected" });
     }
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return res
       .status(500)
-      .send({ error: "Server error", details: err.message });
+      .send({ error: "Server error", details: error.message });
   }
 }

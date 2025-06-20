@@ -41,8 +41,8 @@ export async function registerMail(req, res) {
     }
 
     return res.status(200).json({ message: "Email sent successfully", data });
-  } catch (err) {
-    console.error("Unexpected error:", err);
+  } catch (error) {
+    console.error("Unexpected error:", error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 }

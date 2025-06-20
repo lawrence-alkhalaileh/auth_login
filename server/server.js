@@ -20,12 +20,12 @@ connect()
       app.listen(PORT, () => {
         console.log(`app is listening to port ${PORT}`);
       });
-    } catch (err) {
+    } catch (error) {
       console.log("Cannot Connect to the server");
     }
   })
-  .catch((err) => {
-    console.log("Invalid Database connection...!", err);
+  .catch((error) => {
+    console.log("Invalid Database connection...!", error);
   });
 
 // http://localhost:5000

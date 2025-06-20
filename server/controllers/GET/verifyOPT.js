@@ -8,7 +8,7 @@ export async function verifyOPT(req, res) {
       return res.status(201).send({ msg: "Verify Successfully!" });
     }
     return res.status(404).send({ error: "Invalid OTP" });
-  } catch (err) {
-    return res.status(500).send(err);
+  } catch (error) {
+    return res.status(500).send(error);
   }
 }

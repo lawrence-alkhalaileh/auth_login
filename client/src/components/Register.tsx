@@ -1,24 +1,34 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import avatar from "../assets/profile.png";
 import { useFormik } from "formik";
 import { registerValidation } from "../helpers/validate";
 import { convertToBase64 } from "../helpers/convert";
+import { registerUser } from "../helpers/helper";
+import toast from "react-hot-toast";
 
 export function Register() {
   const [file, setFile] = useState<string | undefined>("");
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       email: "",
       username: "",
       password: "",
+      profile: "",
     },
     validate: registerValidation,
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {
-      values = Object.assign(values, { profile: file || "" });
-      console.log(values);
+      values = { ...values, profile: file || "" };
+      const registerPromise = registerUser(values);
+      toast.promise(registerPromise, {
+        loading: "Creating...",
+        success: <b>Register Successfully</b>,
+        error: <b>Could not Register!</b>,
+      });
+      registerPromise.then(() => navigate("/"));
     },
   });
 
@@ -68,7 +78,7 @@ export function Register() {
               <input
                 {...formik.getFieldProps("username")}
                 className="border-0 px-6 py-5 rounded-xl w-[85%] shadow-sm text-lg focus:outline-none"
-                type="email"
+                type="text"
                 placeholder="Username"
                 required
               />

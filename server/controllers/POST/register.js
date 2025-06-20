@@ -29,8 +29,8 @@ export async function register(req, res) {
     });
 
     return res.status(201).send({ msg: "user created" });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).send(err);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
   }
 }

@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-
+import { authenticate } from "./helper";
 /* ---------------------- Types ---------------------- */
 
 interface UsernameValues {
@@ -21,9 +21,10 @@ interface RegisterValues {
   username?: string;
 }
 
-interface UsernameErrors {
-  username?: string;
-}
+type UsernameErrors = Partial<{
+  username: string;
+  exist: string;
+}>;
 
 interface PasswordErrors {
   password?: string;
@@ -53,7 +54,25 @@ interface ProfileValues {
 export async function usernameValidate(
   values: UsernameValues
 ): Promise<UsernameErrors> {
-  return usernameVerify({}, values);
+  const errors: UsernameErrors = {};
+
+  usernameVerify(errors, values);
+
+  if (values.username && !errors.username) {
+    try {
+      const { status } = await authenticate(values.username);
+      if (status !== 200) {
+        errors.exist = "User does not exist!";
+        toast.error(errors.exist);
+      }
+    } catch (error) {
+      console.log(error);
+      errors.exist = "Error checking username existence";
+      toast.error(errors.exist);
+    }
+  }
+
+  return errors;
 }
 
 export async function passwordValidate(

@@ -19,12 +19,12 @@ export const router = Router();
 router.route("/register").post(register);
 router.route("/login").post(verifyUser, login);
 router.route("/registerMail").post(registerMail);
-router.route("/authenticate").post(authenticate);
+router.route("/authenticate").post(verifyUser, authenticate);
 
 /*#############   GET ROUTES   #############*/
 router.route("/user/:username").get(getUser);
 router.route("/generateOTP").get(verifyUser, localVariables, generateOTP);
-router.route("/verifyOPT").get(verifyOPT);
+router.route("/verifyOPT").get(verifyUser, verifyOPT);
 router.route("/createResetSession").get(createResetSession);
 
 /*#############   PUT ROUTES   #############*/
