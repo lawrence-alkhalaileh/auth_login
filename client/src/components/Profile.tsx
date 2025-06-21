@@ -1,26 +1,40 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import avatar from "../assets/profile.png";
 import { useFormik } from "formik";
 import { profileValidation } from "../helpers/validate";
 import { convertToBase64 } from "../helpers/convert";
+import useFetch from "../hooks/useFetch";
+import { updateUser } from "../helpers/helper";
+import toast from "react-hot-toast";
 
 export function Profile() {
+  const navigate = useNavigate();
+  const [{ isLoading, apiData, serverError }] = useFetch("");
   const [file, setFile] = useState<string | undefined>("");
+
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      mobile: "",
-      address: "",
+      firstName: apiData?.firstName || "",
+      lastName: apiData?.lastName || "",
+      email: apiData?.email || "",
+      mobile: apiData?.mobile || "",
+      address: apiData?.address || "",
     },
+    enableReinitialize: true,
     validate: profileValidation,
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {
-      values = Object.assign(values, { profile: file || "" });
-      console.log(values);
+      values = Object.assign(values, {
+        profile: file || apiData?.profile || "",
+      });
+      const updatePromise = updateUser(values);
+      toast.promise(updatePromise, {
+        loading: "Updating..",
+        success: <b>Update Successfully</b>,
+        error: <b>Could not Update!</b>,
+      });
     },
   });
 
@@ -31,6 +45,19 @@ export function Profile() {
     const base64 = await convertToBase64(file);
     setFile(base64);
   };
+
+  const userLogOut = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
+  if (isLoading) return <h1 className="text-2xl font-bold">Loading ...</h1>;
+
+  if (serverError) {
+    <h1 className="text-2xl text-red-500">
+      server error: {serverError.message}
+    </h1>;
+  }
 
   return (
     <div className="mx-auto">
@@ -47,7 +74,7 @@ export function Profile() {
               <label htmlFor="profile">
                 <img
                   className="w-40 cursor-pointer mb-5 border-4 border-gray-100 rounded-full shadow-lg hover:border-gray-200"
-                  src={file || avatar}
+                  src={apiData?.profile || file || avatar}
                   alt="avatar"
                 />
               </label>
@@ -108,9 +135,9 @@ export function Profile() {
             <div className="text-center py-5">
               <span className="text-gray-500">
                 Come Back Later?
-                <Link className="text-red-500 mx-2" to="/">
+                <button className="text-red-500 mx-2" onClick={userLogOut}>
                   Logout
-                </Link>
+                </button>
               </span>
             </div>
           </form>

@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import type { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
-
+import { getUserNameLocalStorage } from "../helpers/token";
 axios.defaults.baseURL = import.meta.env.VITE_API_SERVER_DOMAIN;
 
 interface UserProfile {
@@ -9,6 +9,9 @@ interface UserProfile {
   firstName: string;
   lastName: string;
   profile: string;
+  mobile: string;
+  address: string;
+  email: string;
 }
 
 interface FetchState<T = UserProfile> {
@@ -31,11 +34,6 @@ export default function useFetch<T = UserProfile>(
   const [data, setData] = useState<FetchState<T>>(getDefaultState<T>());
 
   useEffect(() => {
-    if (!query) {
-      setData(getDefaultState<T>());
-      return;
-    }
-
     const fetchData = async () => {
       try {
         setData((prev) => ({
@@ -44,14 +42,26 @@ export default function useFetch<T = UserProfile>(
           serverError: null,
         }));
 
-        const response: AxiosResponse<T> = await axios.get(`/api/${query}`);
-
-        setData({
-          isLoading: false,
-          apiData: response.data,
-          status: response.status,
-          serverError: null,
-        });
+        if (!query) {
+          const { username } = await getUserNameLocalStorage();
+          const response: AxiosResponse<T> = await axios.get(
+            `/api/user/${username}`
+          );
+          setData({
+            isLoading: false,
+            apiData: response.data,
+            status: response.status,
+            serverError: null,
+          });
+        } else {
+          const response: AxiosResponse<T> = await axios.get(`/api/${query}`);
+          setData({
+            isLoading: false,
+            apiData: response.data,
+            status: response.status,
+            serverError: null,
+          });
+        }
       } catch (error) {
         const axiosError = error as AxiosError;
         setData({

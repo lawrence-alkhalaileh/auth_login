@@ -9,6 +9,7 @@ import {
   PageNotFound,
 } from "./components";
 import { Toaster } from "react-hot-toast";
+import { AuthorizeUser, ProtectedRoute } from "./middleware/auth";
 
 const router = createBrowserRouter([
   {
@@ -22,11 +23,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/password",
-    element: <Password />,
+    element: (
+      <ProtectedRoute>
+        <Password />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/profile",
-    element: <Profile />,
+    element: (
+      <AuthorizeUser>
+        <Profile />
+      </AuthorizeUser>
+    ),
   },
   {
     path: "/recovery",
