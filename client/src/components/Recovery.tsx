@@ -1,5 +1,54 @@
+import { useState, useEffect } from "react";
+import { useAuthStore } from "../store/store";
+import { generateOTP, verifyOTP } from "../helpers/helper";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export function Recovery() {
+  const { username } = useAuthStore((state) => state.auth);
+  const [OTP, setOTP] = useState("");
+  const navigate = useNavigate();
+
+  console.log(username);
+
+  useEffect(() => {
+    if (!username) return;
+
+    const request = async () => {
+      const response = await generateOTP(username);
+      if (response) {
+        toast.success("OTP has been sent to your email");
+      } else {
+        toast.error("Problem while generating OTP!");
+      }
+    };
+
+    request();
+  }, [username]);
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { status } = await verifyOTP(username, Number(OTP));
+
+      if (status === 201) {
+        toast.success("Verify Successfully!");
+        return navigate("/reset");
+      }
+    } catch (err) {
+      console.log(err);
+      return toast.error("Wrong OTP! Check email again!");
+    }
+  };
+
+  const resendOTP = () => {
+    toast.promise(generateOTP(username), {
+      loading: "Sending...",
+      success: <b>OTP has been sent to your email!</b>,
+      error: <b>Could not send it!</b>,
+    });
+  };
 
   return (
     <div className="container mx-auto">
@@ -11,7 +60,7 @@ export function Recovery() {
               Enter OTP to recover password.
             </span>
           </div>
-          <form className="pt-20">
+          <form className="pt-20" onSubmit={onSubmit}>
             <div className="textbox flex flex-col items-center gap-6">
               <div className="input text-center">
                 <span className="py-4 text-sm text-left text-gray-500">
@@ -22,6 +71,7 @@ export function Recovery() {
                   className="border-0 px-5 py-4 rounded-xl w-3/4 shadow-sm text-lg focus:outline-none"
                   type="text"
                   placeholder="OTP"
+                  onChange={(e) => setOTP(e.target.value)}
                 />
               </div>
 
@@ -36,7 +86,11 @@ export function Recovery() {
             <div className="text-center py-4">
               <span className="text-gray-500">
                 Can't get OTP?
-                <button className="text-red-500 mx-2">
+                <button
+                  className="text-red-500 mx-2"
+                  type="button"
+                  onClick={resendOTP}
+                >
                   Resend
                 </button>
               </span>

@@ -15,7 +15,7 @@ export async function registerMail(req, res) {
   const emailHTML = `
     <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f7f7f7;">
       <div style="max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-        <h2 style="color: #333;">👋 Hello, Bitch!</h2>
+        <h2 style="color: #333;">👋 Hello, ${username}</h2>
         <p style="font-size: 16px; color: #555;">
           "Welcome aboard! We're thrilled to have you join us.
         </p>
